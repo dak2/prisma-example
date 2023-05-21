@@ -3,18 +3,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.user.create({
-    data: {
-      name: 'Alice',
-      email: 'alice@prisma.io',
-      posts: {
-        create: { title: 'Hello World' },
-      },
-      profile: {
-        create: { bio: 'I like turtles' },
-      },
-    },
-  })
+  await createUser();
 
   const allUsers = await prisma.user.findMany({
     include: {
@@ -23,6 +12,22 @@ async function main() {
     },
   })
   console.dir(allUsers, { depth: null })
+}
+
+async function createUser() {
+  const randomInt = Math.floor(Math.random() * 10);
+  await prisma.user.create({
+    data: {
+      name: `Alice_${randomInt}`,
+      email: `alice${randomInt}@prisma.io`,
+      posts: {
+        create: { title: 'Hello World' },
+      },
+      profile: {
+        create: { bio: 'I like turtles' },
+      },
+    },
+  })
 }
 
 main()
