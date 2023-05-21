@@ -4,6 +4,7 @@ const prisma = new PrismaClient()
 
 async function main() {
   await createUser();
+  await findUnique();
 
   const allUsers = await prisma.user.findMany({
     include: {
@@ -28,6 +29,16 @@ async function createUser() {
       },
     },
   })
+}
+
+async function findUnique() {
+  // By unique identifier
+  const user = await prisma.user.findUnique({
+    where: {
+      email: 'alice@prisma.io'
+    }
+  })
+  console.log(user);
 }
 
 main()
