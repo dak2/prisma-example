@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({ log: ["query"] })
 
 async function main() {
   await createUser();
   await findUnique();
   await findFirst();
+  await findMany();
 }
 
 async function createUser() {
@@ -54,6 +55,24 @@ async function findFirst() {
     }
   });
   console.log(user);
+}
+
+async function findMany() {
+  const result = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      posts: {
+        select: {
+          id: true,
+          title: true,
+          published: true,
+        }
+      }
+    },
+  })
+  console.log(result);
 }
 
 main()
